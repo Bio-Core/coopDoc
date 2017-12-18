@@ -1,0 +1,1345 @@
+
+\documentclass{article}
+
+\usepackage[margin=1in]{geometry}
+
+\hyphenpenalty=10000
+
+\frenchspacing
+
+%\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{minted}
+
+\setlength{\parskip}{2mm}
+\setlength{\parindent}{0mm}
+
+\usepackage{hyperref}
+
+\title{Co-op Student Orientation Guide}
+
+\author{Dale Dupont}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\newpage
+
+\section{Introduction}
+
+For new co-op students.
+
+It is assumed that you have:
+\begin{enumerate}
+\item Completed your safety training
+\item Submitted immunization records
+\end{enumerate}
+Health Services will notify you if you need any addition immunizations
+or tests. If needed, you will have to go to the Princess Margaret
+Staff Clinic in the lower levels of the building. This can be accessed
+through several levels of elevators.
+
+You will have to attend several orientation events over the course of the
+first several weeks of the work-term. This includes:
+\begin{enumerate}
+\item General Orientation
+\item Research Orientation
+\item Research Computing Orientation
+\end{enumerate}
+You will be automatically scheduled to attend the general and research orientations. However, you will need to receive an e-mail from Susan Alexander in order to be scheduled for Research Computing. Research Computing is the most important orientation, as it will grant to access to the intranet, email,  and Employee Self-Service. You will also have to obtain a badge. Your photo will be taken when you go to obtain a badge. 
+
+
+\section{Development Timeline}
+
+Although there is little documentation of what former co-op students have done, we can infer based on the available repositories, commit histories, and remaining files what the they may have done.
+
+\begin{itemize}
+\item Jonathan Dursi helps lead the CanDIG project
+\item The authentication team is formed.
+\item Spring 2017 - Kevin develops the authentication for the GA4GH server
+in the authentication branch of the CanDIG GA4GH server.
+\item Spring 2017 - Another co-op student develops the frontend to the 
+\item Spring 2017 - 2 months prior to Dale and Jone joining the Toronto
+authentication team of CanDIG, Richard joins the team.
+\item September 2017 - Dale and Jone examine the authentication code for the GA4GH server
+\item September 2017 - The standard GA4GH server is successfully deployed
+\item September 2017 - The Keycloak server is successfully deployed
+\item September 2017 - The authentication branch of the GA4GH server is successfully deployed
+\item September 2017 - The manual deployment procedures are drafted
+\item October 2017 - Dale creates the automated deployer program.
+\item October 2017 - Dale introduces command-line arguments to the program.
+\item October 2017 - A GitHub repository is created on BioCore
+\item October 2017 - Jone creates the Singularity deployment for CanDIG
+\item October 2017- Dale integrates the Singularity recipe into the deployer.
+\item October 2017- Dale creates the Token Tracer program.
+\item October 2017 - Dale introduces command-line arguments to the token tracer program.
+\item November 2017 - Dale creates a Docker deployment for Funnel.
+\item November 2017 - Dale creates a Singularity deployment for Keycloak and Ga4GH Server
+\item November 2017 - Dale forks the CanDIG Ga4GH server code and refactors the authentication branch
+\item December 2017 - The Singularity authentication deployment is successful at the Genome Sciences Centre
+\item December 2017 - This document is created along with the work-term report  
+\end{itemize}
+
+\section{Development Environment}
+
+\subsection{MacOS}
+
+You will generally be developing on a MacOS (this machine) in the dry lab of the 11th floor
+of the MaRS Medical Discovery Tower.
+
+MacOS has many features similar to Linux, but you will likely
+at some point need a Linux virtual machine for at least
+the purposes of testing. Be familiar with the Command Key. The Command Key controls copying, pasting, and cutting, as well as other features normally associated with right-clicks.
+
+\subsection{VirtualBox}
+
+You can create a Debian image through VirtualBox for such means.
+
+How to create a Debian VirtualBox:
+\begin{enumerate}
+\item Download the Debian image.
+\item Run VirtualBox
+\item Create a new Virtual guest operating system
+\item Load the Debian image
+\item Set up the account and root
+\end{enumerate}
+You may wish to add the user account to sudoers. 
+However, for the testing of Singularity, we cannot assume
+that this is the case for the end-users, which means
+it may be better to use \texttt{su} to switch between root 
+and the user.
+
+\subsection{Docker}
+
+Docker will be the primary means of deployment for your projects.
+
+Docker will operate using VirtualBox as a hypervisor.
+Some newer Macs may support creating virtual machines using a
+hardware-based hypervisor. This is what the new version of Docker
+assumes. However, this will not work on this machine.
+
+
+\texttt{docker cp} will allow you to move files
+to and from software containers.
+
+Docker images are built using Dockerfiles.
+
+Some useful docker commands:
+
+\begin{itemize}
+\item \texttt{docker cp}
+\item \texttt{docker build .}
+\item \texttt{docker exec -it CONTAINER\_NAME bash}
+\item \texttt{docker run CONTAINER\_NAME}
+\item \texttt{docker kill CONTAINER\_NAME}
+\item \texttt{docker rm CONTAINER\_NAME}
+\item \texttt{docker container ls}
+\item \texttt{docker images}
+\end{itemize}
+
+See the extensive docker documentation:
+
+\url{https://docs.docker.com}
+
+Docker can be scaled using Kubernetes in a cluster environment.
+
+Some things that have been suggested before related to containers:
+
+\begin{itemize}
+\item LXC
+\item LXD
+\item Intel Clear Containers
+\end{itemize}
+
+\subsection{Text Editors}
+ 
+You may use one of the following (or something else, if you prefer):
+
+\begin{itemize}
+\item Emacs
+\item Vim
+\item Atom
+\item Sublime Text
+\item Nano
+\end{itemize}
+
+Note that Nano may not have as many features as other editors.
+You will generally want to use it in minimal environments 
+(like in a recently deployed software container).
+
+\subsection{Singularity}
+
+Singularity is an alternative deployment framework for your projects.
+Singularity is designed for HPC environments by running the 
+software containers without root permissions. 
+This can make configuring deployment more difficult, as
+you will have to work around root permissions to get them working.
+
+Singularity images are built using Singularity recipe files.
+
+Singularity cannot be run on a Mac.
+There are two workarounds.
+You may either use a Vagrant container to create a Linux
+instance that Singularity may be installed 
+and run in, or you may create a VirtualBox Linux Image
+to run Singularity on.
+
+You may use scp to transfer development files to and from these 
+virtual operating systems.
+
+See the singularity documentation:
+
+
+Use Singularity Hub to distribute Singularity images:
+
+
+You will need to create dedicated GitHub repositories and sign in
+with the same account of those repositories in order to use 
+Singularity.
+
+
+Some useful Singularity commands:
+
+\begin{itemize}
+\item \texttt{singularity build}
+\item \texttt{singularity run}
+\item \texttt{singularity shell}
+\item \texttt{singularity build --writable}
+\item \texttt{singularity run --writable}
+\item \texttt{singularity shell --writable}
+\item \texttt{singularity image.create}
+\item \texttt{singularity image.expand}
+\end{itemize}
+
+
+\subsection{Slack}
+
+Slack is the primary means of communication for software development
+and collaboration.
+You will contact Richard and other developers and end-users that 
+you will be interacting with through here.
+
+The CanDIG channel is one of the Slack groups 
+that are used in the Bioinformatics Group. You will
+have to be invited by Richard in order to join.
+You will also have to register using your UHN email.
+
+\url{https://candig.slack.com/}
+
+You can format your messages using markup:
+
+\url{https://get.slack.help/hc/en-us/articles/202288908-Format-your-messages}
+
+You will want to get into contact with Richard and Jonathan, 
+and any others you will be developing with or for.
+
+\subsection{Email}
+
+You will likely correspond with Natalie and Carl through e-mail 
+for administrative affairs (such as your pay).
+
+You will have to attend the Research Computing Orientation
+you gain access to your e-mail. At the end of the orientation,
+you will line up to have your e-mail and user account created.
+You will have to use a password 8 characters in length.
+
+Your email will likely be of the form:
+\begin{minted}[bgcolor=lightgray]{bash}
+firstname.lastname@uhnresearch.ca
+\end{minted}
+Your username will likely be of the form:
+\begin{minted}[bgcolor=lightgray]{bash}
+<firstLetterOfFirstName>lastname
+\end{minted}
+For example, John Smith's email would be:
+\begin{minted}[bgcolor=lightgray]{bash}
+john.smith@uhnresearch.ca
+\end{minted}
+or alternatively:
+\begin{minted}[bgcolor=lightgray]{bash}
+John.Smith@uhnresearch.ca
+\end{minted}
+John Smith's username is thus:
+\begin{minted}[bgcolor=lightgray]{bash}
+jsmith
+\end{minted}
+Your username will be used to sign onto the internal network
+and gain access to your pay stubs.
+
+\subsection{Remote Access}
+
+To get access to the internal network, you will have to get One-Time-Password
+keys. This is printed on one side of a physical piece of paper.
+You can have someone print it out for you by entering the research
+computing office on the fourth floor (It is directly to the right of the elevators
+along the curved wall). You will need your badge and ID username.
+
+With the OTP keys, you can go to the Research Staff Remote Access portal:
+
+\url{http://www.uhnresearch.ca/remote}
+
+Type in your username and the corresponding OTP key.
+
+Download a Windows 7 Image and run the Microsoft Remote Desktop
+application under \texttt{Applications} in the Mac Finder. 
+
+Run the image that appears there, and log in with your
+username and password.
+
+You will then be able to access Employee Self-Service
+using Internet Explorer from the Research Computing website
+under \texttt{Human Resources}.
+
+\subsection{Git and GitHub}
+
+You will need a GitHub account to use for development.
+You will be creating repositories on GitHub that will
+contain all the files relevant to your projects.
+
+You will need to ask Richard in order to gain access to 
+the BioCore group on GitHub.
+
+This is the GitHub Group for the Bioinformatics Core
+of the Princess Margaret Research Institute (Carl's Group).
+
+\url{https://github.com/Bio-Core}
+
+You should be familiar with the following with git:
+
+\begin{itemize}
+\item \texttt{git status}
+\begin{itemize}
+\item Get information about changes staged for the next commit
+\end{itemize}
+\item \texttt{git add <FILE>} 
+\begin{itemize}
+\item Adds \texttt{<FILE>} to the next commit
+\end{itemize}
+\item \texttt{git add -u}
+\begin{itemize}
+\item Updates all pre-existing files for the next commit
+\end{itemize}
+\item \texttt{git rm <FILE>}
+\begin{itemize}
+\item Deletes \texttt{<FILE>} from the commit
+\end{itemize}
+\item \texttt{git reset HEAD <FILE>}
+\begin{itemize}
+\item Excludes \texttt{<FILE>} from the commit
+\item \texttt{<FILE>} remains locally untracked
+\end{itemize}
+\item \texttt{git commit}
+\begin{itemize}
+\item Creates a commit
+\end{itemize}
+\item \texttt{git commit --amend}
+\begin{itemize}
+\item Updates the last commit
+\end{itemize}
+\item \texttt{git clone https://github.com/User/Repo.git}
+\begin{itemize}
+\item Clones the master branch
+\end{itemize}
+\item \texttt{git clone -b <BRANCH> https://github.com/User/Repo.git} 
+\begin{itemize}
+\item Clones the \texttt{<BRANCH>} branch
+\end{itemize}
+\item \texttt{git checkout -b <BRANCH>}
+\begin{itemize}
+\item Switch to the \texttt{<BRANCH>} branch
+\end{itemize}
+\item \texttt{git merge}
+\begin{itemize}
+\item Merge the commits from the master branch with the current branch
+\end{itemize}
+\item \texttt{git push}
+\begin{itemize}
+\item Push the commits to the remote repository on GitHub
+\end{itemize}
+\item \texttt{git pull}
+\begin{itemize}
+\item Add the commits from the remote repository on GitHub to the local repository
+\end{itemize}
+\item Forking: Perform a fork on GitHub
+\end{itemize}
+
+\url{https://git-scm.com/docs}
+
+\url{https://git-scm.com/book/en/v2}
+
+\textbf{GitHub Releases}
+
+You can create releases to distribute large binary files (just be sure to compress them first).
+
+\subsection{Wiki}
+
+The Princess Margaret Genomics Centre has a wiki:
+
+\url{https://www.pmgenomics.ca/pmgcwiki/index.php/Main_Page}
+
+You will need to sign-in using your Coop account to access it.
+
+The wiki mainly documents analyses, web sites, and computing systems
+that are used by other staff.
+
+\subsubsection{Bis}
+
+\texttt{bis} is a tool designed by Princess Margaret Genomics Centre
+that is used to index PubMed publications by their Medical Subject Heading (MeSH) terms. These are used to determine relevance during searches.
+
+\url{https://www.pmgenomics.ca/bis/}
+
+%\subsubsection{Prober}
+
+%\texttt{prober} is another tool designed by the Princess Margaret Genomics Centre.
+
+\subsection{Meetings}
+
+You will have to meet weekly with the rest of the Bioinformatics group and report to Natalie on what you have done each week. These usually are on Thursdays at \texttt{12:00 pm} in room \texttt{11-402} of the dry lab.
+
+\subsection{Fire Alarms}
+Do not do anything in the event of a fire alarm. Due to the size 
+of the facility, only respond to it if instructions have been given 
+explicitly over the public announcement system. Generally, the public announcement  system will only say "Please await for further instructions", in which case you do nothing. Elevators will not work during the course of the alarm, so you will have to 
+use the stairs.
+
+\newpage
+
+\section{Accessing and Running the Code}
+
+You may develop on a MacOS for the most part.
+However, you may prefer to simply develop within a virtual machine directly.
+
+There is a Debian virtual machine that has been used to test the Singularity deployment.
+You can access it with the default username and password \texttt{coop} and \texttt{waterloo}.
+
+\subsection{Deployer}
+
+Perform the following to do a full root installation:
+\begin{minted}[bgcolor=lightgray]{bash}
+git clone https://github.com/BioCore/candigDeploy.git
+cd candigDeploy
+pip install .
+candigDeploy
+\end{minted}
+You should now have a running GA4GH and Keycloak server.
+
+You can view help for the program using the \texttt{-h} option:
+\begin{minted}[bgcolor=lightgray]{bash}
+candigDeploy -h
+\end{minted}
+You can deploy funnel with the \texttt{-f} option:
+\begin{minted}[bgcolor=lightgray]{bash}
+candigDeploy -f
+\end{minted}
+You can also deploy with the token tracer using the \texttt{-t} option:
+\begin{minted}[bgcolor=lightgray]{bash}
+candigDeploy -t
+\end{minted}
+Change the IP address using the \texttt{-i}, \texttt{-kip} or \texttt{-gip} options.
+Change the port number using the \texttt{-kp} and \texttt{-gp} options.
+
+On the Debian virtual machine, after installing the program as a non-root user, you can run:
+\begin{minted}[bgcolor=lightgray]{bash}
+candigDeploy -s
+\end{minted}
+Which will deploy the Keycloak and GA4GH singularity containers.
+
+Further instructions can be found in the \texttt{README.rst} of the candigDeploy directory.
+
+\subsection{GA4GH Server}
+
+The GA4GH server may be deployed either using Apache or by using Flask directly.
+
+GA4GH server may be directly installed with the commands:
+\begin{minted}[bgcolor=lightgray]{bash}
+git clone https://github.com/BioCore???
+pip install -r requirements.txt
+pip install .
+ga4gh_server
+\end{minted}
+You may use the \texttt{-H} option to change the IP and \texttt{-p} to change the port number.
+\begin{minted}[bgcolor=lightgray]{bash}
+ga4gh_server -H 192.168.99.100 -p 7000
+\end{minted}
+By default, access the GA4GH server at \texttt{127.0.0.1:8000} through your web browser.
+
+The index page will show the REST API that you may access.
+
+For instance to search all references, enter the URL:
+\begin{minted}[bgcolor=lightgray]{bash}
+127.0.0.1:8000/references/search
+\end{minted}
+POST methods will not work on a web browser. Use curl to send POST requests.
+
+The Deployer allows the authentication branch to be executed:
+
+\url{https://github.com/Bio-Core/candigDeploy}
+
+\subsection{Token Tracer}
+You may install and run the token tracer through the following commands:
+\begin{minted}[bgcolor=lightgray]{bash}
+git clone
+pip install .
+tokenTracer
+\end{minted}
+You may use the \texttt{-a} option to print all HTTP packets.
+You may use the \texttt{-j} option to print in JSON format.
+
+Documentation and the source code is available on the GitHub repository:
+
+\url{https://github.com/Bio-Core/tokenTracer}
+
+\newpage
+
+\section{Program Maintenance and Development}
+
+Run the tests for each program. Ensure that they all pass. 
+
+For the CanDIG, GA4GH server, some tests will not pass, as the GA4GH server was 
+never fully developed to provide the features necessary to pass those tests
+before it was abandoned.
+
+You will likely want to branch the code to develop experimental features.
+Then, when the code is ready, send a pull request to the branch that you wish to 
+update.
+If it is a different branch, or has been updated, you will want to merge locally first.
+Ensure that no tests have been broken.
+
+To create your own repository:
+
+
+\subsection{Documentation}
+
+When you write documentation, you have a few choices for the file format:
+
+\begin{enumerate}
+\item Source-Code Comments (\texttt{.py}) (Recommended)
+\item Markdown (\texttt{.md})
+\item ReStructuredText (\texttt{.rst}) (Recommended)
+\item LaTeX (\texttt{.tex})
+\end{enumerate}
+
+It is best to follow the Python conventions for documentation, 
+and include generous amounts of comments in source-code files
+and include additional documentation in reStructuredText Files.
+
+Markdown is the simplest markup language and is recommended for generic
+GitHub projects. Python supports an extension of Markdown called
+reStructuredText that should be used.
+
+LaTeX is what this document was written in before it was 
+complied to PDF. LaTeX should generally only be written
+if the documents are intended to be solely distributed as PDFs.
+I have distributed this as a PDF rather than in .rst format
+in case you do not yet have a text editor prepared.
+PDFs generally do not work as well for documenting source code
+in comparison to reStructuredText.
+
+With reStructuredText, your documentation will automatically
+be formatted whenever it is pushed to GitHub. 
+You can also preview what the reStructuredText will look like
+with a converter such as \texttt{pandoc}.
+
+\url{http://docutils.sourceforge.net/rst.html}
+
+Include the following in your documentation
+
+\begin{itemize}
+\item Overview/Summary
+\item Design documentation
+\item Future changes/TODO
+\item Quickstart
+\item Tutorials/Walkthroughs
+\item Examples
+\item Command-line arguments
+\item Installation instructions
+\end{itemize}
+
+Python Style Guide PEP:
+
+\url{https://www.python.org/dev/peps/pep-0008/}
+
+Docstrings PEP:
+
+\url{https://www.python.org/dev/peps/pep-0257/}
+
+When you comment a method or function,
+include the type of its arguments and a description
+of each argument. Also include the type of its return value
+and a description of what it returns.
+Also include any side-effects, pre-conditions, or post-conditions.
+The first line should give an overview as to what the function does.
+
+\subsubsection{Comments Outside of Source Code}
+
+When you create documentation outside of source code, 
+you should also add comments.
+These comments will not appear when the documentation
+is rendered as markup, but they can be used to structure
+your documentation and explain the inclusion of information.
+
+This is especially useful in writing major documents, where each
+paragraph can receive its own paragraph of comments
+that explains the role of the paragraph in the document.
+
+
+\subsubsection{Diagrams}
+
+Visuals will help improve the presentation of your work.
+Often, visuals are the fastest way to communicate information
+to a reader.
+
+You may design visuals using languages such as \texttt{Asymptote},
+\texttt{PSTricks}, or \texttt{Tikz}. However, these are full-fledged programming
+languages that support computer graphics directly.
+Using a programming language with computer graphics capabilities
+gives you precision in designing graphics and makes it easier
+to make small changes to a diagram.
+
+However, it can take longer to design visuals using a programming
+language, so you may defer to using a mouse-based interface 
+such as \texttt{draw.io}, which is a web application
+for creating diagrams. There are also other diagramming software
+such as \texttt{Umbrello}. You may also consider vector graphics
+software such as \texttt{Inkscape} or raster graphics software 
+\texttt{GIMP}. These programs rely more on your artistic skill
+than with programming languages.
+
+Draw.io:
+
+\url{https://www.draw.io}
+
+Asymptote:
+
+\url{http://asymptote.sourceforge.net}
+
+Note that Asymptote will not compile to the appropriate
+image size and will remain at page size A8 on MacOS.
+Compile Asymptote programs on Linux to resolve this 
+(use VirtualBox). 
+
+\subsection{Packaging}
+
+You will need to structure your projects properly.
+
+Conventionally, the root subdirectory will not contain the 
+source code.
+
+Rather it will contain all the subdirectories important to
+development as well as the source code that is used 
+to build the application.
+
+The top-level directory will also contain
+code related to packaging the Python project.
+
+This will allow end-users to install the package using pip.
+This will also allow you to distribute the project using 
+the Python Package Index.
+
+Other directories that you might include could be
+\texttt{/docs} or \texttt{/tests}. 
+
+A \texttt{\_\_init\_\_.py} file must be included in every subdirectory
+in order for the files
+in that subdirectory to be considered to be part of the package.
+Only these files will be included in the package installation
+and will be detected in Python import statements.
+
+The package itself is a subdirectory of the root directory
+in a Python package.
+
+
+\subsubsection{File Compression}
+
+Use programs like \texttt{gzip} to compress large binaries.
+Programs like \texttt{tar} are useful when compressing directories 
+and their subcontents.
+
+This is particularly useful for distributing binaries,
+container images, and data, such as the Singularity 
+image for Keycloak.
+\begin{minted}{bash}
+gzip file.txt
+gunzip file.txt.gz
+tar -xvzf dir.tar
+\end{minted}
+
+\subsection{Testing}
+
+You will have to test your program many times.
+
+It is best that you write automated tests.
+
+However, you will also have to run tests manually
+in more complicated deployments or as you implement
+new features.
+
+Tests are a way to guarantee the integrity of a program.
+
+You can use a unit testing framework such as \texttt{unittest} or \texttt{pytest}.
+
+\url{https://docs.python.org/2/library/unittest.html}
+
+\url{https://docs.pytest.org/en/latest/}
+
+\url{http://nose2.readthedocs.io/en/latest/getting_started.html}
+
+You may also try proving your programs correct
+using Linear Temporal Logic, Computational Tree Logic, 
+Hoare Triples, and other logics. This is generally 
+very difficult to do.
+
+\subsection{Refactoring}
+
+You will likely have to do a lot of refactoring, both of your own 
+code and the code of previous co-op students.
+
+With refactoring, you want to reduce the number of lines of code
+that the program has while retaining its function.
+This will make the program considerably easier to change 
+and understand in the future, and improve maintainability.
+Code that becomes too unwieldy often suffers the fate of 
+being completely thrown out and replaced with a new application
+coded from the ground-up.
+
+A simple way of refactoring things is to place code into different classes
+and compose the classes together. Classes can be used to group the code together based on its function.
+
+You can also split monolithically large modules into smaller ones
+that are also separated based on their function.
+This makes it simpler to understand the code and predict
+what effects changing code will have on the system.
+
+Boilerplate code can be replaced using classes (an object-oriented approach), using higher-order functions (a functional approach), or using data structures  (a declarative approach).
+
+For instance, we can turn a series of calls to the same function
+initializing different versions of the same object by packing the arguments
+into a list of tuples, each tuple containing a unique set of arguments.
+We then iterate over this list, passing each tuple into the object instantiation.
+
+Some design architectures include structuring your group as a tree or graph.
+You can design nodes that will pass their outputs onto to the nodes
+that they call. Nodes can then be assigned functions at run-time when the 
+graph is built.
+
+\newpage
+
+\section{Python}
+
+Your development will likely take place mostly (if completely) in Python.
+
+Apart from the standard libraries, you will likely have to work 
+with Flask and its extensions.
+Flask is a framework for developing web applications.
+It is used in software such as the GA4GH server and the 
+Laboratory Information Management System.
+
+It is recommended that you go through the Python standard library.
+
+\url{https://docs.python.org/3/library/index.html}
+
+You will be developing in Python 2.7. 
+
+A more advanced reference is the Python Language Reference:
+
+\url{https://docs.python.org/3/reference/index.html}
+
+Some useful things to know:
+
+\begin{itemize}
+\item Partial Functions
+\item Decorators, wrappers
+\item Events, Eventloops, asyncio
+\item threading, subprocesses
+\item os, sys, shutil
+\item Exceptions
+\item Inheritance
+\item Classes, methods, fields
+\item JSON, Yaml, XML
+\end{itemize}
+
+\subsection{Strings}
+
+You can format strings as follows:
+\begin{minted}[bgcolor=lightgray]{python}
+"hello {0}".format("world")
+\end{minted}
+Which prints \texttt{"Hello world"}.
+
+Multiple arguments can be used:
+\begin{minted}[bgcolor=lightgray]{bash}
+"hello {0}, {1} {0}".format("world", "goodbye")
+\end{minted}
+Which prints \texttt{"Hello world, goodbye world"}.
+
+
+\subsection{Coding Conventions}
+
+Flake8 enforces the following coding conventions on GA4GH:
+
+\begin{itemize}
+\item No trailing whitespace
+\item No blank lines with whitespace
+\item One space between methods
+\item Two spaces between classes
+\item Two spaces between functions
+\item Zero to one space between imports
+\item Inline comments must have a space following the hash (\#) symbol
+\end{itemize}
+
+For the sake of running the automated tests through Travis,
+the GA4GH code must pass Flake8's tests.
+Flake8 was used by the development team who originally created GA4GH server.
+
+You do not have to follow these mainly aesthetic conventions for your 
+own projects.
+
+However, it is good practice to include:
+
+\begin{itemize}
+\item Use inline commands
+\item docstrings on all modules, classes, and functions
+\item Use encapsulation
+\item Split code into modules with dedicated functions
+\item Replace repeated code with helper functions
+\item Replace code with data structures and algorithms
+\item Encapsulated related code into a class
+\item Use composition to join functionally different parts together
+\item Use singletons to encapsulate globals
+\item Avoid singletons and globals as much as possible
+\item Parameterize functions as is helpful
+\item Include helpful default arguments
+\item Use functional programming
+\item Use inheritance to give functionally different code the same interface
+\item Use list comprehension
+\item Use lists, dicts, and tuples
+\item Use YAML configuration files
+\item Store data in JSON files
+\item Do not hard-code paths
+\item Use variables/constants to encode repeatedly used literals
+\item Unit tests
+\item Do not repeat code
+\item Make programs extensible
+\end{itemize}
+
+These practices make the function of your code evident 
+through its structure.
+It also makes the code less complicated by coupling 
+its behaviour so that changes in the code
+will effect only small and predictable 
+differences in its behaviour.
+
+You should also document your code further in a dedicated \texttt{/docs} subdirectory
+and document essential end-user information in the \texttt{README.rst} in the root directory.
+
+\subsection{Packing and Unpacking Arguments}
+
+\texttt{*} unpacks a list.
+
+\texttt{*}\texttt{*} unpacks a dictionary.
+
+We may use this to cope with functions that take a large
+number of arguments:
+
+\begin{minted}[bgcolor=lightgray]{python}
+def func(a, b, c, d, e, f, g, i):
+    do something
+
+argDict = { "a" : A, "b" : B, "c" : C, "d" : D, 
+            "e" : E, "f" : F, "g" : G, "i" : I}
+func(**argDict)
+\end{minted}
+
+A function may be defined as:
+
+\begin{minted}[bgcolor=lightgray]{python}
+def func(*args, **kwargs):
+    do something
+\end{minted}
+
+Here, \texttt{args} is an alias for unnamed mandatory arguments.
+\texttt{args} is taken as a list.
+
+\texttt{kwargs} is an alias for key word arguments.
+\texttt{kwargs} is taken as a dictionary.
+
+\texttt{args} precedes \texttt{kwargs} since mandatory unnamed arguments must always be included first. 
+
+\subsection{Iteration}
+
+In Python, a for loop is often sufficient for iteration:
+\begin{minted}[bgcolor=lightgray]{python}
+for i in list:
+   do(i)
+\end{minted}
+You can use the \texttt{range()}
+\begin{minted}[bgcolor=lightgray]{python}
+for i in range(list):
+   do(i)
+\end{minted}
+You can also use recursion, iterators, and generators.
+
+Generators PEP: \url{https://www.python.org/dev/peps/pep-0255/}
+
+Furthermore, list comprehension is a compact way to generate lists:
+
+\begin{minted}[bgcolor=lightgray]{python}
+[ func(i) for i in data if i == True ]
+\end{minted}
+
+You can also functional methods such as \texttt{map}, \texttt{filter}, and \texttt{reduce}.
+
+\subsection{Logging}
+
+Python offers logging facilities through the \texttt{logging} package.
+
+You can import a logger and set its logging level.
+\begin{enumerate}
+\item CRITICAL
+\item ERROR
+\item DEBUG
+\end{enumerate}
+CRITICAL will result in the fewest statements being written.
+DEBUG will result in the greatest number of statements being written.
+
+The logger may be configuration to write to a log file rather
+than stdout.
+
+\url{https://docs.python.org/2/library/logging.html}
+
+\subsection{Data Structures}
+
+\subsubsection{Tuples and Lists}
+
+Lists are useful for mutable sequential data.
+Tuples are useful for immutable ordered data 
+
+A common data structure is a list of tuples for configuration:
+\begin{minted}[bgcolor=lightgray]{python}
+[(a, A, 0), (b, B, 1), (c, C, 2)]
+\end{minted}
+Where the nth entry of each tuple is the same type.
+Each tuple is the configuration for a distinct object.
+Uniform data access is guaranteed by the tuple structure.
+
+\subsubsection{Dictionaries}
+
+Dictionaries are useful for unordered, labelled data.
+
+\subsubsection{Sets}
+
+Sets are efficient for determining whether
+an item belongs to some data structure or set.
+
+Use the keyword \texttt{in} to determine whether something is in a set.
+\begin{minted}[bgcolor=lightgray]{python}
+item = thingX
+set = { thing1, thing2, ..., thingN }
+if item in set:
+   do something
+\end{minted}
+
+\subsection{Regular Expressions}
+
+Regular expressions are useful in searching 
+and parsing. They are a compact means of specifying
+formal languages or sets of symbols. 
+
+\begin{tabular}{|c|c|}
+\hline \texttt{.*} & Match anything \\
+\hline \texttt{|} & Match the pattern on the left or right \\
+\hline \texttt{[]} & Match any inside \\
+\hline \texttt{+} & Match one or more characters \\
+\hline \texttt{*} & Match zero or more characters \\
+\hline \texttt{.} & Match any single character \\
+\hline \texttt{\$} & Match the end of the line \\
+\hline \texttt{\^} & Match the beginning of the line \\
+\hline 
+\end{tabular}
+
+% should be a table
+
+\subsubsection{Globbing}
+
+Globbing is not the same as using regular expressions.
+By default, the bash shell performs globbing.
+
+Regular expressions are available only as command-line
+arguments to certain programs such as grep or egrep.
+
+\subsection{Python Packaging (pip)}
+
+You will need packaging in order to allow your program to
+be run from the command-line in any location and for 
+the program to be installed or downloaded using pip.
+
+You will have to follow the directory structure for a
+Python package.
+
+In the top-level directory, create the following:
+\begin{minted}{bash}
+setup.py
+MANIFEST.in
+setup.cfg
+\end{minted}
+You will also want:
+\begin{minted}{bash}
+README.rst
+License.txt
+\end{minted}
+The \texttt{README.rst} will be the documentation and information
+that users first see when they view the project on GitHub 
+or on PyPi.
+
+\url{https://packaging.python.org/tutorials/distributing-packages/}
+
+\url{https://setuptools.readthedocs.io/en/latest/}
+
+\subsubsection{pkg\_resources}
+
+To avoid hard-coded paths, you can use the \texttt{pkg\_resources} library
+to get the absolute path of your program files regardless of their 
+location on the system. These must be relative to the directory
+of the current module, so it is best to nest these files in lower
+subdirectories.
+
+
+\subsubsection{Licensing}
+
+The \texttt{License.txt} makes it legal for others to download 
+and use your code. You may choose one of the following
+licenses:
+
+\begin{enumerate}
+\item GNU Public License (GPL)
+\item Apache 2.0 License
+\item MIT License
+\end{enumerate}
+
+The MIT License is the simplest and least restrictive.
+You will generally want to copy the license of the 
+libraries and programs that you are using for development.
+
+\subsubsection{Custom Modules}
+
+With a Python package, declare \texttt{\_\_init\_\_.py} in each subdirectory with which 
+you want to import python modules into other modules. You can then write import 
+statements that declare the sequence of subdirectory names, 
+ending with the module name, and starting with the first subdirectory from 
+the top-level directory.
+
+You do not need to include \texttt{\_\_init\_\_.py} in directories that only
+contain data or configuration files.
+However, you will need to include them in \texttt{MANIFEST.in} in order
+to be copied to the installation directory using pip.
+
+The top-level directory of your package (where \texttt{setup.py}) cannot be imported.
+
+
+\subsection{argparse}
+
+To develop command-line programs, you will need argparse
+(or some other similar library). Argparse implements
+command-line options in Python.
+
+\url{https://docs.python.org/3/library/argparse.html}
+
+\newpage
+
+\section{Networking}
+
+\subsection{Network Packets}
+
+%wireshark
+
+Network packets has various layers:
+\begin{enumerate}
+\item Frame
+\item Ethernet Protocol
+\item Internet Protocol
+\item Transmission Control Protocol
+\item Hypertext Transfer Protocol
+\end{enumerate}
+In a packet sniffer program, you can filter based on layers and their fields.
+
+
+\subsection{Pyshark}
+
+Pyshark is used to implement the token tracer. Pyshark's
+packet capturer objects are used to provide an interface 
+to access packets on a network interface for inspection.
+
+To obtain packets, Pyshark interacts with instances of \texttt{tshark}, 
+the terminal implementation of \texttt{Wireshark}. Both of these 
+packet sniffing programs, along with \texttt{tcpdump}, are
+based on the \texttt{libpcap} C library.
+
+\url{https://github.com/KimiNewt/pyshark}
+
+\url{http://kiminewt.github.io/pyshark/}
+
+tcpdump: \url{https://www.tcpdump.org/tcpdump_man.html}
+
+Wireshark: \url{https://www.wireshark.org/docs/wsug_html_chunked/}
+
+tshark: \url{https://www.wireshark.org/docs/man-pages/tshark.html}
+
+\subsection{HTTP Protocol}
+
+\texttt{cURL} may be used to send requests programmatically in place of a web browser.
+\begin{minted}{bash}
+curl -L
+curl -X POST
+curl -d 
+\end{minted}
+
+\url{https://curl.haxx.se/docs/}
+
+An HTTP request contains a header and body.
+
+HTTP packets may be requests or responses.
+
+Requests indicate their method.
+
+Responses will indicate their response code.
+
+Important HTTP methods:
+\begin{itemize}
+\item GET
+\item POST
+\item OPTION
+\item HEAD
+\end{itemize}
+These are important for communicating with the GA4GH API.
+
+Only certain methods are allow on certain endpoints.
+
+Hypertext Transfer Protocol 1.1:
+\url{https://tools.ietf.org/html/rfc2616}
+
+\subsection{Web Servers}
+
+\subsubsection{Web API}
+
+An application programming interface may be made available through 
+the network with a world-wide web connection by making available 
+certain endpoints.
+
+Endpoints are constructed using URLs.
+
+Each unique URL represents a unique endpoint.
+
+Endpoints are registered to accept only create endpoints
+and to provide specific responses.
+
+Endpoints may be programming through a web framework such as Flask.
+
+The GA4GH server contains a frontend that encodes the endpoints
+for the GA4GH server.
+
+Keycloak has endpoints that are used during authentication.
+
+
+\subsubsection{Apache}
+
+Apache is used in production environments.
+Apache provides load-balancing.
+
+Apache is configured through the /etc/apache2 directory.
+Here, the ports that the Apache server may listen to
+are changed through the ports.conf file.
+
+Servers under the sites-available subdirectory
+may be used by the Apache server.
+
+Servers under the sites-enabled subdirectory
+are actively executed by the Apache server.
+
+\url{https://httpd.apache.org/docs/2.4/}
+
+\subsubsection{Flask}
+
+Flask is a Python web framework that allows
+Python programs to be written that operate as web servers.
+
+Flask implements the WSGI Python standard for interacting
+with web servers such as Apache.
+
+The Flask server works through the Flask application object. 
+It contains all the information related to the server, including
+its configuration.
+It is also the object that is run to execute the server.
+This same object is also used to register endpoints.
+
+\url{http://flask.pocoo.org/docs/0.12/}
+
+\section{Authentication}
+
+\subsection{Keycloak}
+
+Keycloak is used as the authentication server of the CanDIG infrastructure.
+Keycloak hosts an embedded H2 java database.
+Keycloak is written in Java.
+
+Keycloak implements the Open ID Connect standards for authentication protocols.
+
+More information may be found on Keycloak's website:
+
+\url{http://www.keycloak.org}
+
+Keycloak's Documentation is available through their website:
+
+\url{http://www.keycloak.org/docs/latest/getting_started/index.html}
+
+Keycloak's GitHub may be accessed here:
+
+\url{https://github.com/keycloak/keycloak}
+
+Keycloak also supports authorization. However, it has not been decided as to whether to use Keycloak to implement authorization, as there are many third-party alternatives for a separate authorization layer.
+
+\subsection{Open ID Connect}
+
+Open ID Connect is a specification for authentication
+which uses the exchange of JSON Web Tokens.
+These tokens are signed using the JSON Web Signature
+and encrypted using the JSON Web Encryption.
+
+These tokens are stored locally on secure applications.
+Such tokens are associated with an expiry time, after which
+new tokens will have to be requested.
+They may be requested using Refresh tokens provided
+those tokens have not expired. Otherwise, the user 
+will have to log in again.
+
+Tokens may be intercepted from a Keycloak server using the Token Tracer program. If we decrypt a token we can learn some information about the user to which the token belongs.
+
+Open ID Connect adds an identity layer on top of OAuth 2.0 
+by defining Identity Tokens.
+
+\url{http://openid.net/specs/openid-connect-core-1_0.html}
+
+\subsection{OAuth 2.0}
+
+OAuth 2.0 is the successor to the OAuth 1.0 standards.
+
+OAuth 2.0 defines Access Tokens
+which are used to grant access to resources.
+
+Resources can be services or data provided by remote servers.
+
+OAuth 2.0 Framework:
+\url{https://tools.ietf.org/html/rfc6749}
+
+Bearer Token Usage:
+\url{https://tools.ietf.org/html/rfc6750}
+
+Threat Model and Security Considerations:
+\url{https://tools.ietf.org/html/rfc6819}
+
+JSON Web Token:
+\url{https://tools.ietf.org/html/rfc7519}
+
+User-Managed Access:
+\url{https://docs.kantarainitiative.org/uma/rec-uma-core.html}
+
+\subsection{Flask-oidc}
+
+A Flask extension that has been used to provide authentication
+for the GA4GH server. Flask-oidc provides an interface
+for the Keycloak server to communicate with the authenticated
+GA4GH server.
+
+This is done by wrapping endpoints in Flask with security methods.
+
+\url{http://flask-oidc.readthedocs.io/en/latest/}
+
+\url{https://github.com/puiterwijk/flask-oidc}
+
+\section{Canadian Distributed Infrastructure for Genomics (CanDIG)}
+
+The CanDIG project is a Canada-wide project with teams based in Toronto, Montreal, and Vancouver.
+
+
+Dale's work concerned the CanDIG project. Jone worked on the Laboratory Information Management System.
+The Toronto team is responsible for developing the Authentication capabilities of the entire CanDIG project.
+In order to solve this, we are using Keycloak, which implements authentication to secure the application
+servers that compose the CanDIG project.
+
+Dale's work is subdivided into three interrelated projects:
+\begin{enumerate}
+\item Deployer Program
+\item Token Tracer
+\item GA4GH Fork
+\end{enumerate}
+The Deployer program is designed to deploy a working version of the CanDIG project based on the applications that are working and have been chosen for support. This is important for testing in development.
+
+The token tracer is part of the logging functions of the CanDIG project and is also considered an independent program for use by Carl's group. The Bioinformatics group maintains its own Keycloak server of which the token
+tracer may be used to monitor packet activity.
+
+The GA4GH variant/reads server was created by the Global Alliance for Genomics and Health Consortium. It has been abandoned and it no longer maintained.
+
+CanDIG is currently using this server and is developing its own version based on the code. The authentication work is concentrated in securing the Flask frontend of this server.
+
+Some of the objectives that have been set out are:
+
+\begin{itemize}
+\item Containerization of Keycloak, ga4gh-server (via Docker, Singularity)
+\item Packaging/Containerization of test data
+\item Review and update funnel
+\item Examine job-running backends for funnel
+\item Determine how to implement shims for staging in/out data through APIs
+\end{itemize}
+
+\url{https://candig.github.io}
+
+\subsection{Global Alliance for Genomics and Health (GA4GH) Server}
+
+A variant/reads API server designed by 
+the Global Alliance for Genomics and Health.
+The project has been abandoned, but a fork has been used
+for the development of the CanDIG project.
+
+\url{https://github.com/CanDIG/ga4gh-server}
+
+The authentication branch contains the authentication
+developed by former co-op students.
+
+The fork on BioCore contains the latest modifications
+to the authentication code:
+
+\url{https://www.ga4gh.org}
+
+\subsection{Funnel}
+
+Funnel is a project to develop a job scheduling tool for performing
+bioinformatics analyses. Funnel may support various backends.
+
+A co-op student designed an authentication frontend written in NodeJS (Javascript)  in order to add authentication facilities to Funnel. The official authentication capabilities only support HTTP Basic, which is insufficient for CanDIG's needs.
+
+\url{https://ohsu-comp-bio.github.io/funnel/}
+
+\url{https://github.com/ohsu-comp-bio/funnel}
+
+\url{https://github.com/CanDIG/funnel-node}
+
+\subsection{PROFYLE}
+
+Integrates with the GA4GH server.
+
+The web-based dashboard that it provides must be authenticated.
+
+\url{https://github.com/CanDIG/PROFYLE_ingest}
+
+
+\subsection{htsget}
+
+Used for large-scale data transfers between sites.
+
+\url{https://github.com/CanDIG/htsget}
+
+
+\end{document}
