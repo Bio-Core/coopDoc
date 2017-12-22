@@ -51,6 +51,24 @@ first several weeks of the work-term. This includes:
 \end{enumerate}
 You will be automatically scheduled to attend the general and research orientations. However, you will need to receive an e-mail from Susan Alexander in order to be scheduled for Research Computing. Research Computing is the most important orientation, as it will grant to access to the intranet, email,  and Employee Self-Service. You will also have to obtain a badge. Your photo will be taken when you go to obtain a badge. 
 
+\subsection{Advice To Co-Op Students}
+
+Based on feedback during performance evaluations, you should
+take care to address the following:
+
+\begin{itemize}
+\item Ensure that your software is documented
+\item Ensure that your software does not break any tests (all tests pass)
+\item Ensure that your software actually works in the actual deployment environments
+\item Ensure that your latest software that is used in deployment is made available on GitHub.
+\end{itemize}
+
+Especially at the end of the co-op term, avoid making major functional changes to the software to ensure stability when the next student takes on the project.
+
+Ideally, the best performing students manage to co-publish papers that are indirectly connected to the software they develop. This, however, is extremely rare and requires the project to involve publishable material.
+
+Your supervisors will communicate relatively little with you and you will have to take initiative for the most part to get projects completed
+and to ensure their quality. This expectation is implicit.
 
 \section{Development Timeline}
 
@@ -121,21 +139,37 @@ Some newer Macs may support creating virtual machines using a
 hardware-based hypervisor. This is what the new version of Docker
 assumes. However, this will not work on this machine.
 
+Docker can be started using the Docker Quickstart Terminal 
+if not following the latest version which requires hardware virtualization support.
 
 \texttt{docker cp} will allow you to move files
 to and from software containers.
 
 Docker images are built using Dockerfiles.
+Dockerfiles have their own special command language when writing them (\texttt{ENV, RUN, CMD, COPY}).
 
 Some useful docker commands:
 
 \begin{itemize}
-\item \texttt{docker cp}
-\item \texttt{docker build .}
-\item \texttt{docker exec -it CONTAINER\_NAME bash}
-\item \texttt{docker run CONTAINER\_NAME}
-\item \texttt{docker kill CONTAINER\_NAME}
-\item \texttt{docker rm CONTAINER\_NAME}
+\item \texttt{docker cp <FILE> <CONTAINER\_NAME>:<PATH>}
+\begin{itemize}
+\item Copy local file \texttt{<FILE>} onto the Docker container \texttt{<CONTAINER\_NAME>} to location \texttt{<PATH>}.
+\end{itemize}
+\item \texttt{docker cp <CONTAINER\_NAME>:<FILE> <PATH>}
+\begin{itemize}
+\item Copy file \texttt{<FILE>} from the Docker container \texttt{<CONTAINER\_NAME>} to local location \texttt{<PATH>} on the host.
+\end{itemize}
+\item \texttt{docker build -t <IMAGE\_NAME> .}
+\begin{itemize}
+\item Build a docker image using the local Dockerfile with image tag \texttt{<IMAGE\_NAME>}
+\end{itemize}
+\item \texttt{docker exec -it <CONTAINER\_NAME> bash}
+\begin{itemize}
+\item Start an interactive terminal bash session in the Docker container \texttt{<CONTAINER\_NAME>}
+\end{itemize}
+\item \texttt{docker run <CONTAINER\_NAME>}
+\item \texttt{docker kill <CONTAINER\_NAME>}
+\item \texttt{docker rm <CONTAINER\_NAME>}
 \item \texttt{docker container ls}
 \item \texttt{docker images}
 \end{itemize}
@@ -180,21 +214,30 @@ you will have to work around root permissions to get them working.
 
 Singularity images are built using Singularity recipe files.
 
-Singularity cannot be run on a Mac.
-There are two workarounds.
-You may either use a Vagrant container to create a Linux
-instance that Singularity may be installed 
-and run in, or you may create a VirtualBox Linux Image
-to run Singularity on.
+Singularity \textbf{cannot} be run on a Mac.
+There are two workarounds:
+\begin{enumerate}
+\item Use a Vagrant container to create a Linux instance that Singularity may be installed  and run in.
+\item Create a VirtualBox Linux Image to run Singularity on.
+\end{enumerate}
+Follow the Singularity documentation for the build instructions.
+You will have to compile Singularity on the Linux machine
+in order to install it.
+
+
+
+
 
 You may use scp to transfer development files to and from these 
 virtual operating systems.
 
 See the singularity documentation:
 
+\url{http://singularity.lbl.gov}
 
 Use Singularity Hub to distribute Singularity images:
 
+\url{https://www.singularity-hub.org}
 
 You will need to create dedicated GitHub repositories and sign in
 with the same account of those repositories in order to use 
@@ -204,16 +247,46 @@ Singularity.
 Some useful Singularity commands:
 
 \begin{itemize}
-\item \texttt{singularity build}
-\item \texttt{singularity run}
-\item \texttt{singularity shell}
-\item \texttt{singularity build --writable}
-\item \texttt{singularity run --writable}
-\item \texttt{singularity shell --writable}
-\item \texttt{singularity image.create}
-\item \texttt{singularity image.expand}
+\item \texttt{singularity build <IMAGE\_NAME.img> Singularity}
+    \begin{itemize}
+    \item Build a read-only image \texttt{<IMAGE\_NAME.img>} from recipe file Singularity.
+    \end{itemize}
+\item \texttt{singularity run <IMAGE\_NAME.img>}
+    \begin{itemize}
+    \item Run \texttt{<IMAGE\_NAME.img>} as read-only container
+    \end{itemize}
+\item \texttt{singularity shell <IMAGE\_NAME.img>}
+    \begin{itemize}
+    \item Start an interactive shell terminal inside the image \texttt{<IMAGE\_NAME.img>} as read-only.
+    \end{itemize}
+\item \texttt{singularity build --writable <IMAGE\_NAME.img> Singularity}
+    \begin{itemize}
+    \item Build a writable image \texttt{<IMAGE\_NAME.img>} from recipe file Singularity.
+    \end{itemize}
+\item \texttt{singularity run --writable <IMAGE\_NAME.img>}
+    \begin{itemize}
+    \item Run \texttt{<IMAGE\_NAME.img>} as writable container
+    \end{itemize}
+\item \texttt{singularity shell --writable <IMAGE\_NAME.img>}
+    \begin{itemize}
+    \item Start an interactive shell terminal inside the image \texttt{<IMAGE\_NAME.img>} as writable.
+    \end{itemize}
+\item \texttt{singularity image.create <IMAGE\_NAME.img>}
+    \begin{itemize}
+    \item Create an empty singularity image called \texttt{<IMAGE\_NAME.img>}.
+    \end{itemize}
+\item \texttt{singularity image.expand <IMAGE\_NAME.img>}
+    \begin{itemize}
+    \item Expand the size of the image \texttt{<IMAGE\_NAME.img>}.
+    \end{itemize}
 \end{itemize}
 
+Changes to read-only containers will not affect their underlying image.
+Hence exiting a read-only container will cause all changes to be lost.
+Singularity images only have a finite size. Writing too much information
+inside a singularity container will result in a disk space error.
+Image size is determined at build-time automatically, but can be
+changed using \texttt{image.expand}.
 
 \subsection{Slack}
 
@@ -662,7 +735,7 @@ and their subcontents.
 This is particularly useful for distributing binaries,
 container images, and data, such as the Singularity 
 image for Keycloak.
-\begin{minted}{bash}
+\begin{minted}[bgcolor=lightgray]{bash}
 gzip file.txt
 gunzip file.txt.gz
 tar -xvzf dir.tar
@@ -981,13 +1054,13 @@ You will have to follow the directory structure for a
 Python package.
 
 In the top-level directory, create the following:
-\begin{minted}{bash}
+\begin{minted}[bgcolor=lightgray]{bash}
 setup.py
 MANIFEST.in
 setup.cfg
 \end{minted}
 You will also want:
-\begin{minted}{bash}
+\begin{minted}[bgcolor=lightgray]{bash}
 README.rst
 License.txt
 \end{minted}
@@ -1091,32 +1164,38 @@ tshark: \url{https://www.wireshark.org/docs/man-pages/tshark.html}
 \subsection{HTTP Protocol}
 
 \texttt{cURL} may be used to send requests programmatically in place of a web browser.
-\begin{minted}{bash}
-curl -L
-curl -X POST
-curl -d 
-\end{minted}
+%\begin{minted}{bash}
+%curl -L http://
+%curl -X POST http://
+%curl -d htpp://
+%\end{minted}
 
 \url{https://curl.haxx.se/docs/}
 
-An HTTP request contains a header and body.
-
-HTTP packets may be requests or responses.
-
-Requests indicate their method.
-
-Responses will indicate their response code.
+An HTTP request contains a header and body. HTTP packets may be requests or responses. Requests indicate their method. Responses will indicate their response code. Only certain methods are allow on certain URLs.
 
 Important HTTP methods:
 \begin{itemize}
 \item GET
+\begin{itemize}
+\item Get the URL specified
+\item Data may be passed by append to the URL
+\end{itemize}
 \item POST
+\begin{itemize}
+\item Send data to the URL specified
+\item Data is carried in the body
+\end{itemize}
 \item OPTION
+\begin{itemize}
+\item Show available HTTP methods accepted by the URL
+\end{itemize}
 \item HEAD
+\begin{itemize}
+\item Show only the response headers
+\end{itemize}
 \end{itemize}
 These are important for communicating with the GA4GH API.
-
-Only certain methods are allow on certain endpoints.
 
 Hypertext Transfer Protocol 1.1:
 \url{https://tools.ietf.org/html/rfc2616}
@@ -1129,33 +1208,20 @@ An application programming interface may be made available through
 the network with a world-wide web connection by making available 
 certain endpoints.
 
-Endpoints are constructed using URLs.
-
-Each unique URL represents a unique endpoint.
-
-Endpoints are registered to accept only create endpoints
-and to provide specific responses.
-
-Endpoints may be programming through a web framework such as Flask.
+Endpoints are constructed using URLs. Each unique URL represents a unique endpoint. Endpoints are registered to accept only create endpoints and to provide specific responses. Endpoints may be programming through a web framework such as Flask.
 
 The GA4GH server contains a frontend that encodes the endpoints
-for the GA4GH server.
-
-Keycloak has endpoints that are used during authentication.
-
+for the GA4GH server. Keycloak has endpoints that are used during authentication.
 
 \subsubsection{Apache}
 
 Apache is used in production environments.
 Apache provides load-balancing.
-
 Apache is configured through the /etc/apache2 directory.
 Here, the ports that the Apache server may listen to
 are changed through the ports.conf file.
-
 Servers under the sites-available subdirectory
 may be used by the Apache server.
-
 Servers under the sites-enabled subdirectory
 are actively executed by the Apache server.
 
@@ -1176,6 +1242,8 @@ It is also the object that is run to execute the server.
 This same object is also used to register endpoints.
 
 \url{http://flask.pocoo.org/docs/0.12/}
+
+\newpage
 
 \section{Authentication}
 
@@ -1200,6 +1268,67 @@ Keycloak's GitHub may be accessed here:
 \url{https://github.com/keycloak/keycloak}
 
 Keycloak also supports authorization. However, it has not been decided as to whether to use Keycloak to implement authorization, as there are many third-party alternatives for a separate authorization layer.
+
+\subsubsection{Basic Deployment}
+
+1. Download the Keycloak server:
+
+\url{http://www.keycloak.org/downloads.html}
+
+\begin{minted}[bgcolor=lightgray]{bash}
+wget https://downloads.jboss.org/keycloak/3.4.0.Final/keycloak-3.4.0.Final.zip
+\end{minted}
+
+2. Extract the file:
+
+\begin{minted}[bgcolor=lightgray]{bash}
+unzip keycloak-3.4.0.Final.zip
+\end{minted}
+
+3. Run \texttt{bin/standalone.sh}:
+
+\begin{minted}[bgcolor=lightgray]{bash}
+./keycloak-3.4.0.Final/bin/standalone.sh
+\end{minted}
+
+The Keycloak server will then be made available on localhost over port 8080
+with no configuration. You wil have to create an administrator account once you log in.
+
+\subsubsection{Configuration}
+
+You may configure the Keycloak server either via the Administration Console
+from a web browser after logging into the master realm as the administrator,
+or via the command-line interface program \texttt{bin/kcadm.sh}.
+
+Admin Console:
+\url{http://www.keycloak.org/docs/latest/server_admin/index.html#admin-console}
+
+Command-line interface \texttt{kcadm.sh}:
+\url{http://www.keycloak.org/docs/latest/server_admin/index.html#the-admin-cli}
+
+Note that \texttt{kcadm.sh} requires a Keycloak server to aleady be running,
+as it will attempt to log into it.
+
+The configuration of the Keycloak server can then be exported once
+configured. The Keycloak configuration can be exported either as a directory of files or a single monolithic JSON file. The exported file or directory can then be imported into an arbitrary number of other Keycloak servers in order to replicate the configuration settings on other deployments.
+
+The administration console only offers a partial export of some of the data of the server. To fully export all of the Keycloak data (including database information), the original command-line script \texttt{standalone.sh} must be used:
+
+\begin{minted}[bgcolor=lightgray]{bash}
+bin/standalone.sh -Dkeycloak.migration.action=export
+-Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=<FILE TO EXPORT TO>
+\end{minted}
+
+Importing is done when the \texttt{standalone.sh} is invoked to start the Keycloak server:
+
+\begin{minted}[bgcolor=lightgray]{bash}
+bin/standalone.sh -Dkeycloak.migration.action=import
+-Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=<FILE TO IMPORT>
+-Dkeycloak.migration.strategy=OVERWRITE_EXISTING
+\end{minted}
+
+Importing and exporting:
+\url{http://www.keycloak.org/docs/latest/server_admin/index.html#_export_import}
 
 \subsection{Open ID Connect}
 
@@ -1240,6 +1369,12 @@ Bearer Token Usage:
 Threat Model and Security Considerations:
 \url{https://tools.ietf.org/html/rfc6819}
 
+JSON Web Signature:
+\url{https://tools.ietf.org/html/rfc7515}
+
+JSON Web Encryption:
+\url{https://tools.ietf.org/html/rfc7516}
+
 JSON Web Token:
 \url{https://tools.ietf.org/html/rfc7519}
 
@@ -1254,10 +1389,28 @@ for the Keycloak server to communicate with the authenticated
 GA4GH server.
 
 This is done by wrapping endpoints in Flask with security methods.
+In particular, for end point method \texttt{getEndpoint()}, we decorate
+the function with \texttt{require\_login()}:
+
+\begin{minted}[bgcolor=lightgray]{python}
+# app is the global Flask application singleton
+app = flask.Flask(__name__)
+# oidc is the flask-oidc extension OpenIDConnect singleton
+oidc = flask.ext.oidc.OpenIDConnect(app)
+
+@oidc.require_login
+def require_login():
+    do something
+\end{minted}
+
+This redirects the user to the Keycloak login screen whenever they
+attempt to request an endpoint without appropriate credentials.
 
 \url{http://flask-oidc.readthedocs.io/en/latest/}
 
 \url{https://github.com/puiterwijk/flask-oidc}
+
+\newpage
 
 \section{Canadian Distributed Infrastructure for Genomics (CanDIG)}
 
@@ -1287,6 +1440,7 @@ CanDIG is currently using this server and is developing its own version based on
 Some of the objectives that have been set out are:
 
 \begin{itemize}
+\item Fix the tests for GA4GH server
 \item Containerization of Keycloak, ga4gh-server (via Docker, Singularity)
 \item Packaging/Containerization of test data
 \item Review and update funnel
@@ -1302,6 +1456,8 @@ A variant/reads API server designed by
 the Global Alliance for Genomics and Health.
 The project has been abandoned, but a fork has been used
 for the development of the CanDIG project.
+Eventually, it is planned to replace GA4GH with a new 
+variants/reads server for CanDIG.
 
 \url{https://github.com/CanDIG/ga4gh-server}
 
@@ -1312,6 +1468,77 @@ The fork on BioCore contains the latest modifications
 to the authentication code:
 
 \url{https://www.ga4gh.org}
+
+Current development is focusing on getting the tests working
+on the authentication branches (mainly \texttt{auth-deploy-stable-test}).
+
+There has been an attempt (by Dale) to refactor the frontend
+(in the branch \texttt{auth-deploy-fixes}), but this has resulted in the 
+failure of the majority of the test suite. 
+
+Branch \texttt{auth-deploy-stable-test} contains the configuration functionality
+needed (located in the \texttt{frontend.py}) as well as deployment configuration
+in the (\texttt{/deploy} directory for apache) in order to deploy the GA4GH
+server in Docker and Singularity containers.
+
+The unit tests are not well understood, and there are many of them.
+However, current development has managed to reduce the number of 
+tests (and endpoints) necessary.
+
+\subsubsection{Flask Execution}
+
+GA4GH server may be run directly through Flask by pip installing the GA4GH server:
+
+\begin{minted}[bgcolor=lightgray]{bash}
+pip install -r requirements.txt
+pip install .
+ga4gh_server
+\end{minted}
+
+\subsubsection{Apache Execution}
+
+GA4GH server may be run through Apache:
+
+\begin{minted}[bgcolor=lightgray]{bash}
+pip install -r requirements.txt
+pip install .
+cp deploy/001-ga4gh.conf /etc/apache2/sites-enabled
+cp deploy/ports.conf /etc/apache2
+apache2ctl restart
+\end{minted}
+
+Apache executes by being told where the application.wsgi is 
+from the 001-ga4gh.conf file. \texttt{application.wsgi} tells
+Apache which class controls the application by naming
+it \texttt{application} in the module.
+
+\subsubsection{Authentication}
+
+Authentication is implemented in the GA4GH server by decorating the
+endpoints with a special decorator \texttt{requires\_login} from the \texttt{flask.ext.oidc} library.
+
+There are also two other non-functional decorators:
+\begin{enumerate}
+\item The old OAuth 2.0 wrapper \texttt{requires\_auth}
+\item The custom \texttt{requires\_token} wrapper
+\end{enumerate}
+
+The \texttt{requires\_token} wrapper essentially does nothing, 
+requiring \texttt{KEYCLOAK} to be set to \texttt{True} in the configuration.
+
+\subsubsection{Running the Tests}
+
+In the root directory of the GA4GH server, execute \texttt{ga4gh\_run\_tests}.
+This will execute the test suite in the following order:
+\begin{enumerate}
+\item Run the Flake8 static linter
+\item Run the nose2 unit tests
+\end{enumerate}
+
+The Flake8 linter has rather strict requirements on the code syntax,
+and must be satisfied in order to proceed with the unit testing.
+
+
 
 \subsection{Funnel}
 
